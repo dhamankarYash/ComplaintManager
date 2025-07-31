@@ -12,6 +12,25 @@
   <p>Streamline complaint handling with role-based dashboards, real-time notifications, and comprehensive tracking capabilities.</p>
 </div>
 
+<div align="center">
+  <a href="https://complaint-manager-seven.vercel.app/" target="_blank">
+    <img src="https://img.shields.io/badge/🌐 Live Demo-View App-blue?style=for-the-badge" alt="Live Demo">
+  </a>
+  <a href="https://www.loom.com/share/1ce6ecadb13e45c5ae140fce75758fdc" target="_blank">
+    <img src="https://img.shields.io/badge/🎥 Video Demo-Watch Now-red?style=for-the-badge" alt="Video Demo">
+  </a>
+</div>
+
+---
+
+## 🌟 Live Demo
+
+**🔗 Application URL**: [https://complaint-manager-seven.vercel.app/](https://complaint-manager-seven.vercel.app/)
+
+**🎬 Video Walkthrough**: [Watch the full demo on Loom](https://www.loom.com/share/1ce6ecadb13e45c5ae140fce75758fdc)
+
+Experience the application in action! The live demo showcases all features including user registration, complaint submission, admin dashboard, and real-time notifications.
+
 ---
 
 ## ✨ Features
@@ -198,7 +217,7 @@ The project uses **Shadcn/UI** components for a consistent and modern interface:
 
 ## 🚀 Deployment
 
-This project is optimized for deployment on **Vercel**.
+This project is optimized for deployment on **Vercel** and is currently live at: **[https://complaint-manager-seven.vercel.app/](https://complaint-manager-seven.vercel.app/)**
 
 ### Vercel Deployment Steps
 
@@ -265,21 +284,6 @@ The project includes tests for:
 
 ---
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙋‍♂️ Support
-
-If you have any questions or need help getting started:
-
-- **GitHub Issues**: [Report bugs or request features](https://github.com/dhamankarYash/ComplaintManager/issues)
-- **Email**: your-email@example.com
-- **Documentation**: Check the inline code comments and API documentation
-
----
 
 ## 🎉 Acknowledgments
 
