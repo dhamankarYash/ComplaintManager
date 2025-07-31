@@ -19,7 +19,7 @@
 ### 🔐 **Authentication & Security**
 - **Secure JWT Authentication** with bcrypt password hashing
 - **Role-based Access Control** (User/Admin permissions)
-- **Session Management** with automatic token refresh
+- **Session Management** with secure token verification
 
 ### 👥 **User Experience**
 - **🏠 User Dashboard**: Submit complaints, track status, view history
@@ -31,15 +31,13 @@
 ### 📋 **Complaint Management**
 - **Complete Lifecycle Tracking**: Open → In Progress → Resolved → Closed
 - **Priority Levels**: Low, Medium, High classification
-- **Category Organization** for better complaint sorting
 - **Advanced Filtering & Search** capabilities
-- **📧 Email Notifications** for status updates
+- **📧 Real-time Email Notifications** for new and updated complaints
 
 ### 🎨 **Modern UI/UX**
 - Built with **Tailwind CSS** and **Shadcn/UI** components
 - Clean, intuitive interface design
 - Smooth animations and transitions
-- Accessibility-first approach
 
 ---
 
@@ -49,10 +47,10 @@
 |----------|------------|
 | **Frontend** | Next.js 14 (App Router), TypeScript, Tailwind CSS |
 | **Backend** | Next.js API Routes, Node.js |
-| **Database** | MongoDB with Mongoose ODM |
+| **Database** | MongoDB |
 | **Authentication** | JWT, bcrypt |
 | **UI Components** | Shadcn/UI, Lucide Icons |
-| **Notifications** | Sonner (Toast), Nodemailer (Email) |
+| **Notifications** | Sonner (Toast), **Nodemailer** (Email) |
 | **Deployment** | Vercel |
 
 ---
@@ -62,26 +60,22 @@
 ```
 complaint-management-system/
 ├── 📂 app/
-│   ├── 📂 admin/              # 🛡️ Admin dashboard & components
 │   ├── 📂 api/                # 🔌 Backend API routes
 │   │   ├── 📂 auth/           # 🔐 Authentication endpoints
-│   │   └── 📂 complaints/     # 📋 CRUD operations
+│   │   └── 📂 complaints/     # 📋 CRUD operations for complaints
 │   ├── 📂 auth/               # 🚪 Login/Register pages
-│   ├── 📂 complaints/         # 📝 User complaint pages
-│   └── 📂 dashboard/          # 🏠 Main user dashboard
+│   └── ... and other pages
 ├── 📂 components/
-│   ├── 📂 ui/                 # 🎨 Reusable UI components
-│   ├── 📄 auth-provider.tsx   # 🔐 Authentication context
-│   └── 📄 navigation.tsx      # 🧭 Navigation component
+│   └── 📂 ui/                 # 🎨 Reusable Shadcn/UI components
 ├── 📂 hooks/
-│   └── 📄 use-auth.tsx        # 🪝 Custom auth hook
+│   └── 📄 use-auth.tsx        # 🪝 Custom auth hook for session management
 ├── 📂 lib/
-│   ├── 📂 models/             # 🗃️ Database schemas
-│   ├── 📄 mongodb.ts          # 🔌 Database connection
-│   └── 📄 jwt.ts              # 🎫 JWT utilities
-├── 📂 scripts/
-│   └── 📄 seed-database.js    # 🌱 Database seeding
-└── 📄 .env.local              # ⚙️ Environment variables
+│   ├── 📂 models/             # 🗃️ MongoDB data models (User, Complaint)
+│   ├── 📄 email.ts            # 📧 Nodemailer email sending logic
+│   ├── 📄 mongodb.ts          # 🔌 Database connection logic
+│   └── 📄 jwt.ts              # 🎫 JWT signing and verification
+├── 📄 .env.local              # ⚙️ Environment variables
+└── 📄 next.config.mjs         # 🛠️ Next.js configuration
 ```
 
 ---
@@ -90,14 +84,12 @@ complaint-management-system/
 
 ### Prerequisites
 
-Before you begin, ensure you have:
+- **Node.js** (v18 or later)
+- **npm** or **pnpm** package manager
+- **MongoDB** instance (local or a free Atlas account)
+- A **Gmail Account** with an **App Password** for sending emails.
 
-- 📦 **Node.js** (v18 or later)
-- 🧶 **pnpm** package manager
-- 🗄️ **MongoDB** instance (local or Atlas)
-- 📧 **Email service** credentials (Gmail/SendGrid)
-
-### Installation
+### Installation & Setup
 
 1. **Clone the repository**
    ```bash
@@ -107,243 +99,198 @@ Before you begin, ensure you have:
 
 2. **Install dependencies**
    ```bash
-   pnpm install
+   npm install
    ```
 
 3. **Set up environment variables**
+   Create a file named `.env.local` in the root of your project and add the following variables:
+   ```ini
+   # 🔐 Authentication
+   JWT_SECRET="generate-a-strong-secret-key-for-jwt"
+
+   # 🗄️ Database
+   MONGODB_URI="your-mongodb-connection-string"
+
+   # 📧 Email Notifications (using Gmail)
+   EMAIL_USER="your-email@gmail.com"
+   EMAIL_PASS="your-16-digit-google-app-password"
+   ```
+   > **Important**: For `EMAIL_PASS`, you must generate a 16-digit **[App Password](https://support.google.com/mail/answer/185833)** from your Google Account security settings. Your regular Gmail password will not work.
+
+4. **Start the development server**
    ```bash
-   cp .env.example .env.local
-   # Edit .env.local with your configuration
+   npm run dev
    ```
 
-4. **Seed the database** (Optional)
-   ```bash
-   node scripts/seed-database.js
-   ```
-
-5. **Start the development server**
-   ```bash
-   pnpm dev
-   ```
-
-6. **Open your browser**
-   ```
-   http://localhost:3000
-   ```
+5. **Open your browser** to `http://localhost:3000`.
 
 ---
 
-## 📖 Usage Guide
+## 📚 API Endpoints
 
-### 👤 For Users
+### Authentication
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/logout` - User logout
 
-| Action | Description |
-|--------|-------------|
-| **🔐 Register/Login** | Create account or sign in with credentials |
-| **📝 Submit Complaint** | Fill form with title, description, category, priority |
-| **📊 Track Progress** | Monitor complaint status in real-time |
-| **📧 Get Notified** | Receive email updates on status changes |
-
-### 👨‍💼 For Administrators
-
-| Action | Description |
-|--------|-------------|
-| **📈 Dashboard Overview** | View complaint statistics and analytics |
-| **🔍 Filter & Search** | Find complaints by status, priority, keywords |
-| **✏️ Update Status** | Change complaint status through workflow |
-| **🗑️ Manage Complaints** | Edit or delete complaints as needed |
+### Complaints
+- `GET /api/complaints` - Fetch all complaints (admin) or user complaints
+- `POST /api/complaints` - Create new complaint
+- `PUT /api/complaints/[id]` - Update complaint status/details
+- `DELETE /api/complaints/[id]` - Delete complaint
 
 ---
 
-## 🔌 API Reference
+## 🎨 UI Components
 
-### Authentication Endpoints
+The project uses **Shadcn/UI** components for a consistent and modern interface:
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/auth/register` | Register new user |
-| `POST` | `/api/auth/login` | User login |
-| `GET` | `/api/auth/verify` | Verify JWT token |
-
-### Complaint Endpoints
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `POST` | `/api/complaints` | Create complaint | ✅ User |
-| `GET` | `/api/complaints` | Get all complaints | ✅ Admin |
-| `GET` | `/api/complaints/user` | Get user complaints | ✅ User |
-| `PUT` | `/api/complaints/[id]` | Update complaint | ✅ Admin |
-| `DELETE` | `/api/complaints/[id]` | Delete complaint | ✅ Admin |
-
-### Admin Endpoints
-
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| `GET` | `/api/admin/stats` | Get dashboard stats | ✅ Admin |
+- **Forms**: Login, registration, and complaint submission forms
+- **Tables**: Data tables for complaint listing with sorting and filtering
+- **Modals**: Confirmation dialogs and detail views
+- **Navigation**: Responsive sidebar and navigation components
+- **Notifications**: Toast notifications for user feedback
 
 ---
 
-## 🗄️ Database Schema
+## 🔧 Configuration
 
-### Users Collection
-```javascript
+### Environment Variables
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `JWT_SECRET` | Secret key for JWT token signing | ✅ |
+| `MONGODB_URI` | MongoDB connection string | ✅ |
+| `EMAIL_USER` | Gmail address for sending notifications | ✅ |
+| `EMAIL_PASS` | Gmail App Password (16-digit) | ✅ |
+
+### Database Schema
+
+#### User Model
+```typescript
 {
   _id: ObjectId,
-  email: String,           // User email (unique)
-  password: String,        // Hashed password
-  role: String,           // 'user' | 'admin'
+  name: string,
+  email: string,
+  password: string (hashed),
+  role: "user" | "admin",
   createdAt: Date
 }
 ```
 
-### Complaints Collection
-```javascript
+#### Complaint Model
+```typescript
 {
   _id: ObjectId,
-  title: String,                    // Complaint title
-  description: String,              // Detailed description
-  category: String,                 // Complaint category
-  priority: String,                 // 'Low' | 'Medium' | 'High'
-  status: String,                   // 'Open' | 'In Progress' | 'Resolved' | 'Closed'
-  dateSubmitted: Date,              // Creation timestamp
-  updatedAt: Date,                  // Last update timestamp
-  userId: ObjectId,                 // Reference to user
-  userEmail: String                 // User email for quick access
+  title: string,
+  description: string,
+  category: string,
+  priority: "low" | "medium" | "high",
+  status: "open" | "in-progress" | "resolved" | "closed",
+  userId: ObjectId,
+  assignedTo?: ObjectId,
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
-
----
-
-## ⚙️ Environment Variables
-
-Create a `.env.local` file in your project root:
-
-```bash
-# 🗄️ Database Configuration
-MONGODB_URI="mongodb://localhost:27017/complaint-manager"
-# or MongoDB Atlas: "mongodb+srv://username:password@cluster.mongodb.net/dbname"
-
-# 🔐 Authentication
-JWT_SECRET="your-super-secret-jwt-key-minimum-32-characters"
-
-# 📧 Email Configuration (Gmail Example)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-specific-password
-SMTP_FROM=your-email@gmail.com
-ADMIN_EMAIL=admin@example.com
-
-# 🌐 Application URL (for production)
-NEXTAUTH_URL=http://localhost:3000
-```
-
-> **💡 Tip**: For Gmail, use an [App Password](https://support.google.com/mail/answer/185833) instead of your regular password.
 
 ---
 
 ## 🚀 Deployment
 
-### Deploy to Vercel (Recommended)
+This project is optimized for deployment on **Vercel**.
 
-1. **Push to GitHub**
-   ```bash
-   git add .
-   git commit -m "Ready for deployment"
-   git push origin main
-   ```
+### Vercel Deployment Steps
 
-2. **Deploy on Vercel**
-   - Connect your GitHub repository to [Vercel](https://vercel.com)
-   - Add environment variables in project settings
-   - Deploy automatically on every push
-
-3. **Configure Environment**
-   - Add all `.env.local` variables to Vercel project settings
-   - Update `NEXTAUTH_URL` to your production domain
+1. **Push your code** to your GitHub repository.
+2. **Import your repository** on the Vercel dashboard.
+3. **Add your environment variables** (`JWT_SECRET`, `MONGODB_URI`, `EMAIL_USER`, `EMAIL_PASS`) in the Vercel project settings.
+4. **Deploy!** Vercel will automatically build and deploy your application. Subsequent pushes to the connected branch will trigger automatic redeployments.
 
 ### Alternative Deployment Options
 
-- **Railway**: Easy MongoDB integration
-- **Heroku**: Classic PaaS deployment
-- **Digital Ocean**: App Platform deployment
-- **AWS**: Amplify or EC2 deployment
+- **Netlify**: Configure build settings and environment variables
+- **Railway**: Deploy with automatic GitHub integration
+- **DigitalOcean App Platform**: Configure app spec and environment variables
+
+---
+
+## 🧪 Testing
+
+### Running Tests
+```bash
+# Run unit tests
+npm run test
+
+# Run integration tests
+npm run test:integration
+
+# Run tests in watch mode
+npm run test:watch
+```
+
+### Test Coverage
+The project includes tests for:
+- API endpoints
+- Authentication middleware
+- Database operations
+- UI components
+
+---
+
+## 🔒 Security Features
+
+- **Password Hashing**: bcrypt with salt rounds
+- **JWT Tokens**: Secure token-based authentication
+- **Input Validation**: Server-side validation for all inputs
+- **CORS Protection**: Configured for secure cross-origin requests
+- **Rate Limiting**: API rate limiting to prevent abuse
+- **SQL Injection Prevention**: MongoDB's built-in protection
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how you can help:
-
-### 🐛 Bug Reports
-- Use the issue tracker to report bugs
-- Include steps to reproduce the issue
-- Add screenshots if applicable
-
-### 💡 Feature Requests
-- Discuss new features in issues first
-- Follow the feature request template
-- Consider backward compatibility
-
-### 🔧 Pull Requests
-
 1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Make your changes**
-4. **Add tests if applicable**
-5. **Commit your changes**
-   ```bash
-   git commit -m "Add amazing feature"
-   ```
-6. **Push to your branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-7. **Open a Pull Request**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Commit your changes**: `git commit -m 'Add some amazing feature'`
+4. **Push to the branch**: `git push origin feature/amazing-feature`
+5. **Open a Pull Request**
+
+### Code Style Guidelines
+- Use TypeScript for type safety
+- Follow ESLint and Prettier configurations
+- Write meaningful commit messages
+- Add tests for new features
 
 ---
 
-## 📝 License
+## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 📞 Support & Contact
-
-- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/dhamankarYash/ComplaintManager/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/dhamankarYash/ComplaintManager/discussions)
-- 📧 **Email**: [your-email@example.com](mailto:your-email@example.com)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## 🙋‍♂️ Support
 
-Special thanks to the amazing open-source community and the following projects:
+If you have any questions or need help getting started:
 
-- **[Next.js](https://nextjs.org/)** - The React framework for production
-- **[MongoDB](https://www.mongodb.com/)** - Document database platform
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[Shadcn/UI](https://ui.shadcn.com/)** - Beautiful UI components
-- **[Vercel](https://vercel.com/)** - Deployment and hosting platform
+- **GitHub Issues**: [Report bugs or request features](https://github.com/dhamankarYash/ComplaintManager/issues)
+- **Email**: your-email@example.com
+- **Documentation**: Check the inline code comments and API documentation
+
+---
+
+## 🎉 Acknowledgments
+
+- **Next.js** team for the amazing framework
+- **Shadcn/UI** for the beautiful component library
+- **Vercel** for seamless deployment
+- **MongoDB** for the flexible database solution
 
 ---
 
 <div align="center">
-  <h3>⭐ Star this project if you found it helpful!</h3>
   <p>Made with ❤️ by <a href="https://github.com/dhamankarYash">Yash Dhamankar</a></p>
-</div>
-
----
-
-## 📊 Project Stats
-
-<div align="center">
-  <img src="https://img.shields.io/github/stars/dhamankarYash/ComplaintManager?style=social" alt="Stars">
-  <img src="https://img.shields.io/github/forks/dhamankarYash/ComplaintManager?style=social" alt="Forks">
-  <img src="https://img.shields.io/github/issues/dhamankarYash/ComplaintManager" alt="Issues">
-  <img src="https://img.shields.io/github/license/dhamankarYash/ComplaintManager" alt="License">
+  <p>⭐ Star this repo if you found it helpful!</p>
 </div>
