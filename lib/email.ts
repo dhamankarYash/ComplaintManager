@@ -1,23 +1,44 @@
+// lib/email.ts
+
+import nodemailer from "nodemailer";
+
 interface EmailOptions {
-  to: string
-  subject: string
-  html: string
+  to: string;
+  subject: string;
+  html: string;
 }
 
+// The real, working sendEmail function
 export async function sendEmail(options: EmailOptions) {
-  // Mock email sending - replace with real email service later
-  console.log("Mock email sent:", {
+  const transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // Use SSL
+    auth: {
+  user: process.env.SMTP_USER,
+  pass: process.env.SMTP_PASS,
+},
+  });
+
+  const mailOptions = {
+    from: `"ComplaintMS Team" <${process.env.SMTP_USER}>`, // ✅ correct
+
     to: options.to,
     subject: options.subject,
     html: options.html,
-  })
+  };
 
-  // Simulate email sending delay
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  return { success: true, messageId: `mock-${Date.now()}` }
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully! Message ID:", info.messageId);
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return { success: false, messageId: null };
+  }
 }
 
+// The exported email template generator function
 export function generateComplaintConfirmationEmail(complaintId: string, title: string) {
   return {
     subject: `Complaint Confirmation - ${complaintId}`,
@@ -35,5 +56,5 @@ export function generateComplaintConfirmationEmail(complaintId: string, title: s
         <p>Best regards,<br>ComplaintMS Team</p>
       </div>
     `,
-  }
+  };
 }
