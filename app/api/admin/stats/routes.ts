@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { ComplaintModel } from "@/lib/models/complaint"
 import { verifyToken } from "@/lib/jwt"
 
+
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get("authorization")
